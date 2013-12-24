@@ -1,0 +1,10 @@
+{
+    "name": "Filters for EaselJS",
+    "description": "Filters for EaselJS API documentation.",
+    "version": "0.0.1",
+    "url": "https://github.com/u-kudox/Filters_for_EaselJS",
+    "options": {
+        "outdir": "../docs",
+        "paths":["../src"]
+    }
+}

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>GlowFilter Demo | Filters for EaselJS</title>
+<link rel="stylesheet" type="text/css" href="css/demo.css" media="all">
+<script type="text/javascript" src="js/easeljs-0.7.1.min.js"></script>
+<script type="text/javascript" src="js/tweenjs-0.5.1.min.js"></script>
+<script type="text/javascript" src="js/bitmapdata-1.0.0.min.js"></script>
+<script type="text/javascript" src="js/glowfilter.min.js"></script>
+<script type="text/javascript">
+
+(function(window) {
+	var FPS = 30;
+	var NUM_TWINKLE = 4;
+
+	var _canvas;
+	var _stage;
+	var _width;
+	var _height;
+
+	function GlowFilterDemo(canvasID) {
+		_canvas = document.getElementById(canvasID);
+		_width = _canvas.width;
+		_height = _canvas.height;
+		_stage = new createjs.Stage(_canvas);
+		this.glowFilter = new createjs.GlowFilter(0xFFFFFF, 1, 16, 16, 2, 2);
+		this.bg = createBG();
+		_stage.addChild(this.bg)
+		this.tree = createTree();
+		_stage.addChild(this.tree);
+		this.text = createText();
+		_stage.addChild(this.text);
+		this.twinkle = new createjs.Container();
+		this.twinkle.compositeOperation = "lighter";
+		_stage.addChild(this.twinkle);
+		createMap.call(this);
+		createjs.Ticker.setFPS(FPS);
+		createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
+		createjs.Ticker.on("tick", this.tickHandler, this);
+	}
+
+	var p = GlowFilterDemo.prototype;
+
+	p.bg = null;
+	p.tree = null;
+	p.text = null;
+	p.twinkle = null;
+	p.map = null;
+	p.glowFilter = null;
+
+	p.tickHandler = function() {
+		this.twinkleEmit();
+		_stage.update();
+	};
+
+	p.twinkleEmit = function() {
+		for (var i = 0; i < NUM_TWINKLE; i++) {
+			createTwinkle.call(this);
+		}
+	};
+
+	function createTwinkle() {
+		var map = this.map;
+		var point = map[(Math.random() * map.length) >> 0];
+		var radius = 8;
+		var sides = 6;
+		var pointSize = 0.85;
+		var angle = (Math.random() * 360) >> 0;
+		var shape = new createjs.Shape();
+		shape.graphics.f("rgba(255, 255, 255, 1)").dp(0, 0, radius, sides, pointSize, angle).ef();
+		shape.filters = [this.glowFilter];
+		var nr = -radius;
+		var rd = radius * 2;
+		shape.cache(nr, nr, rd, rd);
+		shape.x = point.x;
+		shape.y = point.y;
+		shape.scaleX = shape.scaleY = 0;
+		this.twinkle.addChild(shape);
+		var tween = createjs.Tween.get(shape)
+		.to({scaleX:1, scaleY:1}, 300, createjs.Ease.sineOut)
+		.to({scaleX:0, scaleY:0}, 600, createjs.Ease.sineIn);
+		tween.call(removeTwinkle, [tween], this);
+	}
+
+	function removeTwinkle(tween) {
+		this.twinkle.removeChild(tween.target);
+	}
+
+	function createMap() {
+		var tree = this.tree;
+		var offsetX = tree.x + tree._cacheOffsetX;
+		var offsetY = tree.y + tree._cacheOffsetY;
+		var bmd = createjs.BitmapData.getBitmapData(this.tree);
+		var map = [];
+		var w = bmd.width;
+		var h = bmd.height;
+		for (var y = 0; y < h; y++) {
+			for (var x = 0; x < w; x++) {
+				var color = bmd.getPixel(x, y);
+				var green = color >> 8 & 0xFF;
+				if (49 < green) {
+					map[map.length] = new createjs.Point(x + offsetX, y + offsetY);
+				}
+			}
+		}
+		this.map = map;
+		bmd.dispose();
+	}
+
+	function createText() {
+		var text = new createjs.Text("Merry Christmas!", "46px Arial", "#FFFFFF");
+		text.set({x:_width >> 1, y:60, textAlign:"center"});
+		var bounds = text.getBounds();
+		text.cache(bounds.x, bounds.y, bounds.width, bounds.height + 10);
+		return text;
+	}
+
+	function createTree() {
+		var shape = new createjs.Shape().set({x:_width >> 1, y:_height});
+		var g = shape.graphics;
+		g.lf(["#2C110A", "#3F2317"], [0, 1], -10, 0, 10, 0).r(-10, -40, 20, 40).ef();
+		g.f("rgba(0, 50, 0, 1)")
+		.mt(0, -220).lt(-90, -40).lt(90, -40).cp()
+		.mt(0, -270).lt(-80, -100).lt(80, -100).cp()
+		.mt(0, -320).lt(-70, -160).lt(70, -160).cp()
+		.ef();
+		shape.cache(-90, -320, 180, 360);
+		return shape;
+	}
+
+	function createBG() {
+		var shape = new createjs.Shape();
+		var g = shape.graphics;
+		g.lf(["#0A2A44", "#335E80"], [0, 1], 0, 0, 0, _height).r(0, 0, _width, _height).ef();
+		g.f("rgba(");
+		for (var i = 0, l = 60; i < l; i++) {
+			g.f("rgba(255, 255, 255, " + (Math.random() * 0.5 + 0.5) + ")");
+			var x = Math.random() * _width;
+			var y = Math.random() * _height * 0.7;
+			var r = Math.random() * 1.2;
+			g.dc(x, y, r);
+			g.ef();
+		}
+		shape.cache(0, 0, _width, _height);
+		return shape;
+	}
+
+	window.addEventListener("load", function loadHandler(evt) {
+		removeEventListener("load", loadHandler);
+		new GlowFilterDemo("my-canvas");
+	});
+
+}(window));
+
+</script>
+</head>
+<body>
+<canvas width="465" height="465" id="my-canvas"></canvas>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>GlowFilter simple example | Filters for EaselJS</title>
+<link rel="stylesheet" type="text/css" href="css/sample.css" media="all">
+<script type="text/javascript" src="js/easeljs-0.7.1.min.js"></script>
+<script type="text/javascript" src="js/glowfilter.min.js"></script>
+<script type="text/javascript">
+
+(function(window) {
+	var FPS = 60;
+
+	var _canvas;
+	var _stage;
+	var _shape;
+	var _glowFilter;
+
+	function init(canvasID) {
+		_canvas = document.getElementById(canvasID);
+		_stage = new createjs.Stage(_canvas);
+		createjs.Ticker.setFPS(FPS);
+		createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
+		draw();
+		_stage.update();
+	}
+
+	function draw() {
+		var centerX = _canvas.width >> 1;
+		var centerY = _canvas.height >> 1;
+		_shape = new createjs.Shape().set({x:centerX, y:centerY});
+		_shape.graphics.f("rgba(0,0,255,1)").dp(0, 0, 100, 5, 0.6, -90).ef();
+		var color = 0x00FFFF;
+		var alpha = 1;
+		var blurX = 32;
+		var blurY = 32;
+		var strength = 1;
+		var quality = 1;
+		var inner = false;
+		var knockout = false;
+		_glowFilter = new createjs.GlowFilter(color, alpha, blurX, blurY, strength, quality, inner, knockout);
+		_shape.filters = [_glowFilter];
+		_shape.cache(-100, -100, 200, 200);
+		_stage.addChild(_shape);
+	}
+
+	window.addEventListener("load", function loadHandler(evt) {
+		removeEventListener("load", loadHandler);
+		init("my-canvas");
+	});
+
+}(window));
+
+</script>
+</head>
+<body>
+<canvas width="640" height="360" id="my-canvas"></canvas>
+</body>
+</html>
