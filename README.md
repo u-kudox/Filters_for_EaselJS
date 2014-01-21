@@ -8,7 +8,8 @@ Filters for EaselJS adds AS3 like Filters to EaselJS.
 
 
 ## Resources
-Read the documentation at the [Filters for EaselJS API Documentation](http://kudox.jp/reference/filters_for_easeljs/)
+* Read the documentation at the [Filters for EaselJS API Documentation](http://kudox.jp/reference/filters_for_easeljs/)
+* The information of GlowFilter and samples at the [kudox.jp](http://kudox.jp/java-script/createjs-easeljs-glowfilter)
 
 
 ## Example GlowFilter

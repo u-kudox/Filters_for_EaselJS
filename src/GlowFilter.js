@@ -50,75 +50,8 @@ _stage.addChild(_shape);</code></pre>
 		this.knockout = !!knockout;
 	}
 
-	var p = {
-		/**
-		* The color of the glow. The default value is 0xFF0000. Valid values are in the hexadecimal format 0xRRGGBB.
-		* @property color
-		* @type uint
-		* @default 0xFF0000
-		**/
-		get color() {
-			return this._red << 16 | this._green << 8 | this._blue;
-		},
-		set color(value) {
-			this._red = value >> 16 & 0xFF;
-			this._green = value >> 8 & 0xFF;
-			this._blue = value & 0xFF;
-			return this.color;
-		},
-
-		/**
-		* The amount of horizontal blur. The default value is 0. This value is passed to BlurFilter of EaselJS.
-		* @property blurX
-		* @type Number
-		* @default 0
-		**/
-		get blurX() {
-			return this._blurFilter.blurX;
-		},
-		set blurX(value) {
-			return this._blurFilter.blurX = value;
-		},
-
-		/**
-		* The amount of vertical blur. The default value is 0. This value is passed to BlurFilter of EaselJS.
-		* @property blurY
-		* @type Number
-		* @default 0
-		**/
-		get blurY() {
-			return this._blurFilter.blurY;
-		},
-		set blurY(value) {
-			return this._blurFilter.blurY = value;
-		},
-
-		/**
-		* The number of blur iterations. The default value is 1. This value is passed to BlurFilter of EaselJS.
-		* @property quality
-		* @type Number
-		* @default 1
-		**/
-		get quality() {
-			return this._blurFilter.quality;
-		},
-		set quality(value) {
-			return this._blurFilter.quality = value;
-		}
-	};
-
-	var sProto = Object.create(createjs.Filter.prototype);
-	for (var k in sProto) {
-		p[k] = sProto[k];
-	}
-	GlowFilter.prototype = p;
+	var p = GlowFilter.prototype = Object.create(createjs.Filter.prototype);
 	p.constructor = GlowFilter;
-
-	p._red = 255;
-
-	p._green = 0;
-
-	p._blue = 0;
 
 	/**
 	* The alpha transparency value for the glow color. Valid values are 0 to 1.
@@ -153,6 +86,81 @@ _stage.addChild(_shape);</code></pre>
 	p.knockout = false;
 
 	p._blurFilter = null;
+
+	Object.defineProperties(p, {
+		/**
+		* The color of the glow. The default value is 0xFF0000. Valid values are in the hexadecimal format 0xRRGGBB.
+		* @property color
+		* @type uint
+		* @default 0xFF0000
+		**/
+		"color" : {
+			get : function() {
+				return this._red << 16 | this._green << 8 | this._blue;
+			},
+			set : function(value) {
+				this._red = value >> 16 & 0xFF;
+				this._green = value >> 8 & 0xFF;
+				this._blue = value & 0xFF;
+				return this.color;
+			},
+			enumerable : true
+		},
+
+		/**
+		* The amount of horizontal blur. The default value is 0. This value is passed to BlurFilter of EaselJS.
+		* @property blurX
+		* @type Number
+		* @default 0
+		**/
+		"blurX" : {
+			get : function() {
+				return this._blurFilter.blurX;
+			},
+			set : function(value) {
+				return this._blurFilter.blurX = value;
+			},
+			enumerable : true
+		},
+
+		/**
+		* The amount of vertical blur. The default value is 0. This value is passed to BlurFilter of EaselJS.
+		* @property blurY
+		* @type Number
+		* @default 0
+		**/
+		"blurY" : {
+			get : function() {
+				return this._blurFilter.blurY;
+			},
+			set : function(value) {
+				return this._blurFilter.blurY = value;
+			},
+			enumerable : true
+		},
+
+		/**
+		* The number of blur iterations. The default value is 1. This value is passed to BlurFilter of EaselJS.
+		* @property quality
+		* @type Number
+		* @default 1
+		**/
+		"quality" : {
+			get : function() {
+				return this._blurFilter.quality;
+			},
+			set : function(value) {
+				return this._blurFilter.quality = value;
+			},
+			enumerable : true
+		}
+	});
+
+	p._red = 255;
+
+	p._green = 0;
+
+	p._blue = 0;
 
 	/**
 	* Returns a rectangle with values indicating the margins required to draw the filter or null.
