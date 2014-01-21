@@ -3,38 +3,49 @@ module.exports = function(grunt) {
 		pkg : grunt.file.readJSON('package.json'),
 		uglify : {
 			glowfilter : {
-				src : ['../src/GlowFilter.js'],
-				dest : '../lib/glowfilter.min.js'
+				src : ['src/GlowFilter.js'],
+				dest : 'lib/glowfilter.min.js'
 			},
 			dropshadowfilter : {
-				src : ['../src/DropShadowFilter.js'],
-				dest : '../lib/dropshadowfilter.min.js'
+				src : ['src/DropShadowFilter.js'],
+				dest : 'lib/dropshadowfilter.min.js'
+			},
+			filters : {
+				src : ['src/GlowFilter.js', 'src/DropShadowFilter.js'],
+				dest : 'lib/filters-for-easeljs-<%= pkg.version %>.min.js'
 			}
 		},
 		copy : {
 			glowfilter : {
-				files : [{expand:true, cwd:'../lib/', src:'glowfilter.min.js', dest:'../examples/js/'}]
+				files : [{expand:true, cwd:'lib/', src:'glowfilter.min.js', dest:'examples/js/'}]
 			},
 			dropshadowfilter : {
-				files : [{expand:true, cwd:'../lib/', src:'dropshadowfilter.min.js', dest:'../examples/js/'}]
+				files : [{expand:true, cwd:'lib/', src:'dropshadowfilter.min.js', dest:'examples/js/'}]
+			},
+			filters : {
+				files : [{expand:true, cwd:'lib/', src:'filters-for-easeljs-<%= pkg.version %>.min.js', dest:'examples/js/'}]
 			}
 		},
 		watch : {
 			glowfilter : {
-				files : ['../src/GlowFilter.js'],
+				files : ['src/GlowFilter.js'],
 				tasks : ['glowfilter']
 			},
 			dropshadowfilter : {
-				files : ['../src/DropShadowFilter.js'],
+				files : ['src/DropShadowFilter.js'],
 				tasks : ['dropshadowfilter']
+			},
+			filters : {
+				files : ['src/GlowFilter.js', 'src/DropShadowFilter.js'],
+				tasks : ['filters']
 			}
 		},
 		clean : {
+			filters : {
+				src : ['lib/filters-for-easeljs*.js', 'example/js/filters-for-easeljs*.js']
+			},
 			docs : {
-				src : ['yuidoc', '../docs'],
-				options : {
-					force : true
-				}
+				src : ['build/yuidoc', 'docs']
 			}
 		},
 		yuidoc : {
@@ -44,17 +55,17 @@ module.exports = function(grunt) {
 				version : '<%= pkg.version %>',
 				url : '<%= pkg.url %>',
 				options : {
-					paths : '../src',
-					outdir : 'yuidoc'
+					paths : 'src',
+					outdir : 'build/yuidoc'
 				}
 			}
 		},
 		compress : {
 			docs : {
 				options : {
-					archive : '../docs/<%= pkg.name.toLowerCase() %>-<%= pkg.version %>-docs.zip'
+					archive : 'docs/<%= pkg.name.toLowerCase() %>-<%= pkg.version %>-docs.zip'
 				},
-				files : [{expand:true, src:'**', cwd:'yuidoc'}]
+				files : [{expand:true, src:'**', cwd:'build/yuidoc'}]
 			}
 		}
 	});
@@ -69,4 +80,5 @@ module.exports = function(grunt) {
 	grunt.registerTask('docs', ['clean:docs', 'yuidoc:docs', 'compress:docs']);
 	grunt.registerTask('glowfilter', ['uglify:glowfilter', 'copy:glowfilter']);
 	grunt.registerTask('dropshadowfilter', ['uglify:dropshadowfilter', 'copy:dropshadowfilter']);
+	grunt.registerTask('filters', ['clean:filters', 'uglify:filters', 'copy:filters']);
 };
