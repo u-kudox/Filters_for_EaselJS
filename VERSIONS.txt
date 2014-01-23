@@ -1,3 +1,10 @@
+ver 0.2.0 [Jan 23, 2014]
+**********************************************************************************
+- Added DropShadowFilter class.
+- Added dropshadowfilter_simple_example.html to the examples.
+- Added dropshadowfilter_inner_knockout_hideobject.html to the examples.
+
+
 ver 0.1.1 [Jan 21, 2014]
 **********************************************************************************
 - Fixed the problem of GlowFilter that instanceof(createjs.Filter) returned false.
