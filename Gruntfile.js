@@ -3,14 +3,23 @@ module.exports = function(grunt) {
 		pkg : grunt.file.readJSON('package.json'),
 		uglify : {
 			glowfilter : {
+				options : {
+					banner : grunt.file.read('src/License.js'),
+				},
 				src : ['src/GlowFilter.js'],
 				dest : 'lib/glowfilter.min.js'
 			},
 			dropshadowfilter : {
+				options : {
+					banner : grunt.file.read('src/License.js'),
+				},
 				src : ['src/DropShadowFilter.js'],
 				dest : 'lib/dropshadowfilter.min.js'
 			},
 			filters : {
+				options : {
+					banner : grunt.file.read('src/License.js'),
+				},
 				src : ['src/GlowFilter.js', 'src/DropShadowFilter.js'],
 				dest : 'lib/filters-for-easeljs-<%= pkg.version %>.min.js'
 			}
@@ -42,7 +51,7 @@ module.exports = function(grunt) {
 		},
 		clean : {
 			filters : {
-				src : ['lib/filters-for-easeljs*.js', 'example/js/filters-for-easeljs*.js']
+				src : ['lib/filters-for-easeljs*.js', 'examples/js/filters-for-easeljs*.js']
 			},
 			docs : {
 				src : ['build/yuidoc', 'docs']

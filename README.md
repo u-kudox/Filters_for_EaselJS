@@ -5,11 +5,12 @@ Filters for EaselJS adds AS3 like Filters to EaselJS.
 
 ## Included Filters
 * GlowFilter
+* DropShadowFilter
 
 
 ## Resources
 * Read the documentation at the [Filters for EaselJS API Documentation](http://kudox.jp/reference/filters_for_easeljs/)
-* The information of GlowFilter and samples at the [kudox.jp](http://kudox.jp/java-script/createjs-easeljs-glowfilter)
+* Information of GlowFilter and samples at the [kudox.jp](http://kudox.jp/java-script/createjs-easeljs-glowfilter)
 
 
 ## Example GlowFilter
@@ -26,6 +27,26 @@ Filters for EaselJS adds AS3 like Filters to EaselJS.
 	_glowFilter = new createjs.GlowFilter(color, alpha, blurX, blurY, strength, quality, inner, knockout);
 	_shape.filters = [_glowFilter];
 	_shape.cache(-100, -100, 200, 200);
+
+## Example DropShadowFilter
+	_text = new createjs.Text("DropShadowFilter", "bold 64px Arial", "#CC0000");
+	_text.set({x:centerX, y:centerY, textAlign:"center", textBaseline:"middle"});
+	var distance = 3;
+	var angle = 90;
+	var color = 0x000000;
+	var alpha = 0.5;
+	var blurX = 4;
+	var blurY = 4;
+	var strength = 1;
+	var quality = 2;
+	var inner = false;
+	var knockout = false;
+	var hideObject = false;
+	_dropShadowFilter = new createjs.DropShadowFilter(distance, angle, color, alpha, blurX, blurY, strength, quality, inner, knockout, 	hideObject);
+	_text.filters = [_dropShadowFilter];
+	var bounds = _text.getBounds();
+	_text.cache(bounds.x, bounds.y, bounds.width, bounds.height);
+	_stage.addChild(_text);
 
 
 ## Contact and bug reports

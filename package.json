@@ -1,6 +1,6 @@
 {
   "name": "Filters_for_EaselJS",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Filters for EaselJS adds AS3 like Filters to EaselJS.",
   "url": "https://github.com/u-kudox/Filters_for_EaselJS",
   "main": "Gruntfile.js",

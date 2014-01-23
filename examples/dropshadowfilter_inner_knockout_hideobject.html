@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>DropShadowFilter inner, knockout, hideObject | Filters for EaselJS</title>
+<link rel="stylesheet" type="text/css" href="css/sample.css" media="all">
+<script type="text/javascript" src="js/easeljs-0.7.1.min.js"></script>
+<script type="text/javascript" src="js/dropshadowfilter.min.js"></script>
+<script type="text/javascript">
+
+(function(window) {
+	var FPS = 60;
+
+	var _canvas;
+	var _stage;
+	var _star1, _star2, _star3, _star4, _star5;
+	var _dropShadowFilter1, _dropShadowFilter2, _dropShadowFilter3, _dropShadowFilter4, _dropShadowFilter5;
+
+	function init(canvasID) {
+		_canvas = document.getElementById(canvasID);
+		_stage = new createjs.Stage(_canvas);
+		createjs.Ticker.setFPS(FPS);
+		createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
+		draw();
+		_stage.update();
+	}
+
+	function draw() {
+		var centerX = _canvas.width >> 1;
+		var centerY = _canvas.height >> 1;
+
+		_star1 = createStar(centerX - 250, centerY, "star1");
+		_dropShadowFilter1 = new createjs.DropShadowFilter(4, 45, 0x000000, 0.5, 8, 8, 1, 2);
+		_star1.filters = [_dropShadowFilter1];
+		_star1.cache(-60, -60, 120, 120);
+		_stage.addChild(_star1);
+
+		_star2 = createStar(centerX - 125, centerY, "star2");
+		_dropShadowFilter2 = _dropShadowFilter1.clone();
+		_dropShadowFilter2.knockout = true;
+		_star2.filters = [_dropShadowFilter2];
+		_star2.cache(-60, -60, 120, 120);
+		_stage.addChild(_star2);
+
+		_star3 = createStar(centerX, centerY, "star3");
+		_dropShadowFilter3 = _dropShadowFilter1.clone();
+		_dropShadowFilter3.inner = true;
+		_star3.filters = [_dropShadowFilter3];
+		_star3.cache(-60, -60, 120, 120);
+		_stage.addChild(_star3);
+
+		_star4 = createStar(centerX + 125, centerY, "star4");
+		_dropShadowFilter4 = _dropShadowFilter3.clone();
+		_dropShadowFilter4.knockout = true;
+		_star4.filters = [_dropShadowFilter4];
+		_star4.cache(-60, -60, 120, 120);
+		_stage.addChild(_star4);
+
+		_star5 = createStar(centerX + 250, centerY, "star5");
+		_dropShadowFilter5 = _dropShadowFilter1.clone();
+		_dropShadowFilter5.hideObject = true;
+		_star5.filters = [_dropShadowFilter5];
+		_star5.cache(-60, -60, 120, 120);
+		_stage.addChild(_star5);
+	}
+
+	function createStar(x, y, name) {
+		var shape = new createjs.Shape();
+		shape.graphics.f("rgba(255,0,0,1)").dp(0, 0, 60, 5, 0.6, -90).ef();
+		shape.set({x:x, y:y, name:name});
+		return shape;
+	}
+
+	window.addEventListener("load", function loadHandler(evt) {
+		removeEventListener("load", loadHandler);
+		init("my-canvas");
+	});
+
+}(window));
+
+</script>
+</head>
+<body>
+<canvas width="640" height="360" id="my-canvas"></canvas>
+</body>
+</html>
