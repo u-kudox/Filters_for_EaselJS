@@ -50,60 +50,61 @@ _text.cache(bounds.x, bounds.y, bounds.width, bounds.height);
 _stage.addChild(_text);</code></pre>
 	**/
 	function DropShadowFilter(distance, angle, color, alpha, blurX, blurY, strength, quality, inner, knockout, hideObject) {
-		if (distance !== undefined) this._distance = distance;
-		if (angle !== undefined) this._angle = (angle % 360 + 360) % 360;
-		setOffset.call(this, this._distance, this._angle);
-		if (!isNaN(color)) this.color = color;
-		if (alpha !== undefined) this.alpha = alpha;
+		this._distance = (distance !== undefined) ? distance : 4;
+		this._angle = (angle !== undefined) ? (angle % 360 + 360) % 360 : 45;
+		this._setOffset(this._distance, this._angle);
+		if (!isNaN(color)) {
+			this.color = color;
+		} else {
+			this._red = this._green = this._blue = 0;
+		}
+		/**
+		* private property
+		**/
 		this._blurFilter = new createjs.BlurFilter(blurX, blurY, quality);
-		if (strength !== undefined) this.strength = strength >> 0;
+
+		/**
+		* The alpha transparency value for the shadow color. Valid values are 0 to 1. The default value is 1.
+		* @property alpha
+		* @type Number
+		* @default 1
+		**/
+		this.alpha = (alpha !== undefined) ? alpha : 1;
+
+		/**
+		* The strength of the shadow. The default value is 1. Valid values are 0 to 255. But as for this value, a low value is more preferable.
+		* @property strength
+		* @type uint
+		* @default 1
+		**/
+		this.strength = (strength !== undefined) ? strength >> 0 : 1;
+
+		/**
+		* Specifies whether or not the shadow is an inner shadow. The default value is false, expressing outer shadow.
+		* @property inner
+		* @type Boolean
+		* @default false
+		**/
 		this.inner = !!inner;
+
+		/**
+		* Specifies whether or not the object has a knockout effect. The default value is false, expressing no knockout effect.
+		* @property knockout
+		* @type Boolean
+		* @default false
+		**/
 		this.knockout = !!knockout;
+
+		/**
+		* Specifies whether or not the object is hidden. If the value is true, the object is hidden and only the shadow is visible. The default value is false, expressing the object is visible.
+		* @property hideObject
+		* @type Boolean
+		* @default false
+		**/
 		this.hideObject = !!hideObject;
 	}
 
-	var p = DropShadowFilter.prototype = Object.create(createjs.Filter.prototype);
-	p.constructor = DropShadowFilter;
-
-	/**
-	* The alpha transparency value for the shadow color. Valid values are 0 to 1. The default value is 1.
-	* @property alpha
-	* @type Number
-	* @default 1
-	**/
-	p.alpha = 1;
-
-	/**
-	* The strength of the shadow. The default value is 1. Valid values are 0 to 255. But as for this value, a low value is more preferable.
-	* @property strength
-	* @type uint
-	* @default 1
-	**/
-	p.strength = 1;
-
-	/**
-	* Specifies whether or not the shadow is an inner shadow. The default value is false, expressing outer shadow.
-	* @property inner
-	* @type Boolean
-	* @default false
-	**/
-	p.inner = false;
-
-	/**
-	* Specifies whether or not the object has a knockout effect. The default value is false, expressing no knockout effect.
-	* @property knockout
-	* @type Boolean
-	* @default false
-	**/
-	p.knockout = false;
-
-	/**
-	* Specifies whether or not the object is hidden. If the value is true, the object is hidden and only the shadow is visible. The default value is false, expressing the object is visible.
-	* @property hideObject
-	* @type Boolean
-	* @default false
-	**/
-	p.hideObject = false;
+	var p = createjs.extend(DropShadowFilter, createjs.Filter);
 
 	Object.defineProperties(p, {
 		/**
@@ -117,9 +118,9 @@ _stage.addChild(_text);</code></pre>
 				return this._angle;
 			},
 			set : function(value) {
-				value = (value % 360 + 360) % 360;
-				setOffset.call(this, this._distance, value);
-				return this._angle = value;
+				this._angle = value = (value % 360 + 360) % 360;
+				this._setOffset(this._distance, value);
+				return value;
 			},
 			enumerable : true
 		},
@@ -135,8 +136,9 @@ _stage.addChild(_text);</code></pre>
 				return this._distance;
 			},
 			set : function(value) {
-				setOffset.call(this, value, this._angle);
-				return this._distance = value;
+				this._distance = value;
+				this._setOffset(value, this._angle);
+				return value;
 			},
 			enumerable : true
 		},
@@ -171,7 +173,8 @@ _stage.addChild(_text);</code></pre>
 				return this._blurFilter.blurX;
 			},
 			set : function(value) {
-				return this._blurFilter.blurX = value;
+				this._blurFilter.blurX = value;
+				return value;
 			},
 			enumerable : true
 		},
@@ -187,7 +190,8 @@ _stage.addChild(_text);</code></pre>
 				return this._blurFilter.blurY;
 			},
 			set : function(value) {
-				return this._blurFilter.blurY = value;
+				this._blurFilter.blurY = value;
+				return value;
 			},
 			enumerable : true
 		},
@@ -203,27 +207,12 @@ _stage.addChild(_text);</code></pre>
 				return this._blurFilter.quality;
 			},
 			set : function(value) {
-				return this._blurFilter.quality = value;
+				this._blurFilter.quality = value;
+				return value;
 			},
 			enumerable : true
 		}
 	});
-
-	p._angle = 45;
-
-	p._distance = 4;
-
-	p._offsetX = 0;
-
-	p._offsetY = 0;
-
-	p._red = 0;
-
-	p._green = 0;
-
-	p._blue = 0;
-
-	p._blurFilter = null;
 
 	/**
 	* Returns a rectangle with values indicating the margins required to draw the filter or null.
@@ -232,11 +221,11 @@ _stage.addChild(_text);</code></pre>
 	* @method getBounds
 	* @return {Rectangle} a rectangle object indicating the margins required to draw the filter or null if the filter does not effect bounds.
 	**/
-	p.getBounds = function() {
+	p.getBounds = function(rect) {
 		if (this.inner) {
-			return null;
+			return rect;
 		} else {
-			var bounds = this._blurFilter.getBounds();
+			var bounds = this._blurFilter.getBounds(rect);
 			var ox = this._offsetX;
 			var oy = this._offsetY;
 			if (ox !== 0) {
@@ -363,11 +352,14 @@ _stage.addChild(_text);</code></pre>
 		return "[DropShadowFilter]";
 	};
 
-	function setOffset(distance, angle) {
-		var r = (angle) * createjs.Matrix2D.DEG_TO_RAD;
+	/**
+	* private method
+	**/
+	p._setOffset = function(distance, angle) {
+		var r = angle * createjs.Matrix2D.DEG_TO_RAD;
 		this._offsetX = Math.cos(r) * distance;
 		this._offsetY = Math.sin(r) * distance;
-	}
+	};
 
-	createjs.DropShadowFilter = DropShadowFilter;
+	createjs.DropShadowFilter = createjs.promote(DropShadowFilter, "Filter");
 }(window));

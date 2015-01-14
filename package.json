@@ -1,6 +1,6 @@
 {
   "name": "Filters_for_EaselJS",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Filters for EaselJS adds AS3 like Filters to EaselJS.",
   "url": "https://github.com/u-kudox/Filters_for_EaselJS",
   "main": "Gruntfile.js",
@@ -8,11 +8,12 @@
   "license": "public domain",
   "devDependencies": {
     "grunt": "~0.4.2",
-    "grunt-contrib-uglify": "~0.3.1",
-    "grunt-contrib-copy": "~0.5.0",
-    "grunt-contrib-watch": "~0.5.3",
     "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-compress": "~0.6.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-uglify": "~0.3.1",
+    "grunt-contrib-watch": "~0.5.3",
     "grunt-contrib-yuidoc": "~0.5.0",
-    "grunt-contrib-compress": "~0.6.0"
+    "grunt-text-replace": "^0.4.0"
   }
 }
