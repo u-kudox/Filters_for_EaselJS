@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>DropShadowFilter simple example | Filters for EaselJS</title>
 <link rel="stylesheet" type="text/css" href="css/sample.css" media="all">
-<script type="text/javascript" src="js/easeljs-0.7.1.min.js"></script>
+<script type="text/javascript" src="http://code.createjs.com/easeljs-0.8.0.min.js"></script>
 <script type="text/javascript" src="js/dropshadowfilter.min.js"></script>
 <script type="text/javascript">
 
@@ -44,7 +44,7 @@
 		_dropShadowFilter = new createjs.DropShadowFilter(distance, angle, color, alpha, blurX, blurY, strength, quality, inner, knockout, hideObject);
 		_text.filters = [_dropShadowFilter];
 		var bounds = _text.getBounds();
-		_text.cache(bounds.x, bounds.y - 2, bounds.width, bounds.height + 2);
+		_text.cache(bounds.x, bounds.y - 2, bounds.width, bounds.height + 5);
 		_stage.addChild(_text);
 	}
 

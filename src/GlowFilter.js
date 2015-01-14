@@ -43,48 +43,52 @@ _shape.cache(-100, -100, 200, 200);
 _stage.addChild(_shape);</code></pre>
 	**/
 	function GlowFilter(color, alpha, blurX, blurY, strength, quality, inner, knockout) {
-		if (!isNaN(color)) this.color = color;
-		if (alpha !== undefined) this.alpha = alpha;
+		if (!isNaN(color)) {
+			this.color = color;
+		} else {
+			this._red = 255;
+			this._green = this._blue = 0;
+		}
+
+		/**
+		* private property
+		**/
 		this._blurFilter = new createjs.BlurFilter(blurX, blurY, quality);
-		if (strength !== undefined) this.strength = strength;
+
+		/**
+		* The alpha transparency value for the glow color. Valid values are 0 to 1.
+		* @property alpha
+		* @type Number
+		* @default 1
+		**/
+		this.alpha = (alpha !== undefined) ? alpha : 1;
+
+		/**
+		* The strength of the glow. The default value is 1. Valid values are 0 to 255. But as for this value, a low value is more preferable.
+		* @property strength
+		* @type uint
+		* @default 1
+		**/
+		this.strength = (strength !== undefined) ? strength : 1;
+
+		/**
+		* Specifies whether the glow is an inner glow. The default value is false, expressing outer glow.
+		* @property inner
+		* @type Boolean
+		* @default false
+		**/
 		this.inner = !!inner;
+
+		/**
+		* Specifies whether the object has a knockout effect. The default value is false, expressing no knockout effect.
+		* @property knockout
+		* @type Boolean
+		* @default false
+		**/
 		this.knockout = !!knockout;
 	}
 
-	var p = GlowFilter.prototype = Object.create(createjs.Filter.prototype);
-	p.constructor = GlowFilter;
-
-	/**
-	* The alpha transparency value for the glow color. Valid values are 0 to 1.
-	* @property alpha
-	* @type Number
-	* @default 1
-	**/
-	p.alpha = 1;
-
-	/**
-	* The strength of the glow. The default value is 1. Valid values are 0 to 255. But as for this value, a low value is more preferable.
-	* @property strength
-	* @type uint
-	* @default 1
-	**/
-	p.strength = 1;
-
-	/**
-	* Specifies whether the glow is an inner glow. The default value is false, expressing outer glow.
-	* @property inner
-	* @type Boolean
-	* @default false
-	**/
-	p.inner = false;
-
-	/**
-	* Specifies whether the object has a knockout effect. The default value is false, expressing no knockout effect.
-	* @property knockout
-	* @type Boolean
-	* @default false
-	**/
-	p.knockout = false;
+	var p = createjs.extend(GlowFilter, createjs.Filter);
 
 	Object.defineProperties(p, {
 		/**
@@ -117,7 +121,8 @@ _stage.addChild(_shape);</code></pre>
 				return this._blurFilter.blurX;
 			},
 			set : function(value) {
-				return this._blurFilter.blurX = value;
+				this._blurFilter.blurX = value;
+				return value;
 			},
 			enumerable : true
 		},
@@ -133,7 +138,8 @@ _stage.addChild(_shape);</code></pre>
 				return this._blurFilter.blurY;
 			},
 			set : function(value) {
-				return this._blurFilter.blurY = value;
+				this._blurFilter.blurY = value;
+				return value;
 			},
 			enumerable : true
 		},
@@ -149,19 +155,12 @@ _stage.addChild(_shape);</code></pre>
 				return this._blurFilter.quality;
 			},
 			set : function(value) {
-				return this._blurFilter.quality = value;
+				this._blurFilter.quality = value;
+				return value;
 			},
 			enumerable : true
 		}
 	});
-
-	p._red = 255;
-
-	p._green = 0;
-
-	p._blue = 0;
-
-	p._blurFilter = null;
 
 	/**
 	* Returns a rectangle with values indicating the margins required to draw the filter or null.
@@ -170,11 +169,11 @@ _stage.addChild(_shape);</code></pre>
 	* @method getBounds
 	* @return {Rectangle} a rectangle object indicating the margins required to draw the filter or null if the filter does not effect bounds.
 	**/
-	p.getBounds = function() {
+	p.getBounds = function(rect) {
 		if (this.inner) {
-			return null;
+			return rect;
 		} else {
-			return this._blurFilter.getBounds();
+			return this._blurFilter.getBounds(rect);
 		}
 	};
 
@@ -277,5 +276,5 @@ _stage.addChild(_shape);</code></pre>
 		return "[GlowFilter]";
 	};
 
-	createjs.GlowFilter = GlowFilter;
+	createjs.GlowFilter = createjs.promote(GlowFilter, "Filter");
 }(window));

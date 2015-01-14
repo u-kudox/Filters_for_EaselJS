@@ -76,6 +76,32 @@ module.exports = function(grunt) {
 				},
 				files : [{expand:true, src:'**', cwd:'build/yuidoc'}]
 			}
+		},
+		replace : {
+			bitmapdata : {
+				src : ['examples/*.html'],
+				overwrite : true,
+				replacements : [{
+					from : /js\/bitmapdata-.+min\.js/,
+					to : 'js/bitmapdata-1.1.0.min.js'
+				}]
+			},
+			easeljs : {
+				src : ['examples/*.html'],
+				overwrite : true,
+				replacements : [{
+					from : /easeljs-.+min\.js/,
+					to : 'easeljs-0.8.0.min.js'
+				}]
+			},
+			tweenjs : {
+				src : ['examples/*.html'],
+				overwrite : true,
+				replacements : [{
+					from : /tweenjs-.+min\.js/,
+					to : 'tweenjs-0.6.0.min.js'
+				}]
+			}
 		}
 	});
 
@@ -85,6 +111,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-yuidoc');
 	grunt.loadNpmTasks('grunt-contrib-compress');
+	grunt.loadNpmTasks('grunt-text-replace');
 
 	grunt.registerTask('docs', ['clean:docs', 'yuidoc:docs', 'compress:docs']);
 	grunt.registerTask('glowfilter', ['uglify:glowfilter', 'copy:glowfilter']);
